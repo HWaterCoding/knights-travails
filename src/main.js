@@ -35,7 +35,7 @@
 //rather than create an actual graph, determine the vertex current stood on and mathematically calculate it's neighbors.
 //Throw away any co-ordinates that aren't on the board, again, with conditionals to check >= 0
 //
-function knightMoves(coord1, coord2){
+export default function knightMoves(coord1, coord2){
     //strictly enforce proper rules for co-ords (probably add value limits for values in arrays, too)
     if(!Array.isArray(coord1) || !Array.isArray(coord2) ||
         coord1.length !== 2 || coord2.length !== 2){
@@ -69,6 +69,10 @@ function knightMoves(coord1, coord2){
 
     //update as knight moves.
     //.push() previous square to pathTaken[] to store path taken
+
+
+    
+    // return [[0, 0], [1, 2]]
 }
 
 //helper function to determine moves for knightMoves()
