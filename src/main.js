@@ -23,7 +23,7 @@
 
 
 
-//USE A BFS <---- NOT A DFS. <--- BFS IS SPECIFICALLY FOR FINDING A SHORTEST PATH
+//USE A BFS <---- NOT A DFS. <--- BFS IS SPECIFICALLY FOR FINDING A SHORTEST PATH, DFS WILL CYCLE
 
 
 
@@ -71,7 +71,7 @@ export default function knightMoves(coord1, coord2){
     //.push() previous square to pathTaken[] to store path taken
 
 
-    
+
     // return [[0, 0], [1, 2]]
 }
 
