@@ -52,60 +52,74 @@ export default function knightMoves(coord1, coord2){
     }
 
     //array to store every square knight has visited in path
-    //BE SURE TO ADD STARTING TILE IMMEDIATELY, AND DESTINATION TILE AT END OF PATH.
     const pathTaken = [];
+    //Store the starting tile immediately
+    pathTaken.push(coord1);
 
-    //coord1 is currentPosition, 
-    let currentPosition = coord1;
-
-
-    //loop start here? (condition is while currentPosition !== coord2)
-
-
-    //possible squares the knight can move to from current position
+    //this will be my queue
     const possibleMoves = [];
+    possibleMoves.push(coord1);
 
-    //get possible coordinates knight can move to
-    getPossibleMoves(currentPosition);
+
+    //MASSIVE ISSUE: NEED TO KEEP TRACK OF WHAT SQUARES HAVE ALREADY BEEN VISITED SO THE MOVES
+    //FOR THE CURRENT COORDINATE DON'T INCLUDE THE TILE YOU JUST CAME FROM OR HAVE PREVIOUSLY VISITED
+    while(possibleMoves.length > 0){
+        //store the current coordinate
+        const coordinate = possibleMoves.shift();
+
+        const allMoves = [];
+        
+        //get possible coordinates knight can move to
+        const moves = getPossibleMoves(coordinate);
+
+        //add all possible moves returned from function into allMoves array.
+        allMoves.push(moves);
+        
+        //if the current coordinate isnt the destination tile, push the next possible moves.
+        if(coordinate[0] !== coord2[0] || coordinate[1] !== coord2[1]){
+            //push new coords (potential moves) to queue
+            possibleMoves.push(allMoves);
+
+        }
+
+        //.push() shortest path to pathTaken[] to store path taken
+    }
+
     
-    //discard any coordinate that falls outside of the board
 
-    //add all possible moves returned from function into possibleMoves array.
-
-    //choose which coordinate to go to.
-
-    //.push() currentPosition square to pathTaken[] to store path taken
-
-    //update as knight moves. (rewrite our currentPosition, recall getPossibleMoves())
-
-    //check if(currentPosition === coord2) and stop loop when you've reached destination
-
-
+    //final returned array that contains the shortest path
     return pathTaken;
-
-    // return [[0, 0], [1, 2]]
 }
 
-//helper function to determine moves for knightMoves()
+//helper function to determine moves for knightMoves() (adjacency list)
 function getPossibleMoves(currentPosition){
     //take the current position and use algorithm to determine where knight can move
-    const position = currentPosition;
+    const [x, y] = currentPosition;
 
-    const moves = [];
-
-
-
-    //(do this with algorithm = any adjacent vertex = +2/+1 || -2/-1 of one coordinate value)
-    //[3, 3] ---> adjacent vertices === 
+    // adjacent vertices: (if currentPosition = [3, 3])
     // [4, 5](+1, +2), [5, 4](+2, +1)
     // [2, 1](-1, -2), [1, 2](-2, -1)
     // [4, 1](+1, -2), [5, 2](+2, -1)
     // [2, 5](-1, +2), [1, 4](-2, +1)
     //There are a maximum of 8 possible adjacent verices for any given square
 
-    //generate array containing possible moves. 
+    //generate all adjacent vertices (possible moves for knight) 
+    const potentialMoves = [
+        [x + 1, y + 2], [x + 2, y + 1],
+        [x + 1, y - 2], [x + 2, y - 1],
+        [x - 1, y + 2], [x - 2, y + 1],
+        [x - 1, y - 2], [x - 2, y - 1]
+    ];
+
     //check if any coordinate in those moves is outside the 0-7 range
     //discard that entire set and return the array with only legitimate moves as coordinates
+    const legitimateMoves = potentialMoves.filter(move => {
+        const [moveX, moveY] = move;
+        return moveX >= 0 && moveX <= 7 && moveY >= 0 && moveY <= 7;
+    });
+
+    return legitimateMoves;
 }
 
-// console.log(knightMoves())
+
+console.log(knightMoves([0, 0], [3, 3]))
