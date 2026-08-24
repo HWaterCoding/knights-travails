@@ -36,7 +36,7 @@
 //Throw away any co-ordinates that aren't on the board, again, with conditionals to check >= 0
 //
 export default function knightMoves(coord1, coord2){
-    //strictly enforce proper rules for co-ords (probably add value limits for values in arrays, too)
+    //strictly enforce proper rules for co-ords
     if(!Array.isArray(coord1) || !Array.isArray(coord2) ||
         coord1.length !== 2 || coord2.length !== 2){
         throw new Error("Please enter a valid coordinate.");
@@ -51,26 +51,37 @@ export default function knightMoves(coord1, coord2){
         throw new Error("That square doesn't exist.");
     }
 
-    //possible squares the knight can move to from current position
-    const knightMoves = [];
-
     //array to store every square knight has visited in path
+    //BE SURE TO ADD STARTING TILE IMMEDIATELY, AND DESTINATION TILE AT END OF PATH.
     const pathTaken = [];
 
     //coord1 is currentPosition, 
-    let position = coord1;
-    //get possible coordinates knight can move to
-    getPossibleMoves(position)
-    
+    let currentPosition = coord1;
 
+
+    //loop start here? (condition is while currentPosition !== coord2)
+
+
+    //possible squares the knight can move to from current position
+    const possibleMoves = [];
+
+    //get possible coordinates knight can move to
+    getPossibleMoves(currentPosition);
+    
     //discard any coordinate that falls outside of the board
+
+    //add all possible moves returned from function into possibleMoves array.
 
     //choose which coordinate to go to.
 
-    //update as knight moves.
-    //.push() previous square to pathTaken[] to store path taken
+    //.push() currentPosition square to pathTaken[] to store path taken
+
+    //update as knight moves. (rewrite our currentPosition, recall getPossibleMoves())
+
+    //check if(currentPosition === coord2) and stop loop when you've reached destination
 
 
+    return pathTaken;
 
     // return [[0, 0], [1, 2]]
 }
@@ -78,6 +89,11 @@ export default function knightMoves(coord1, coord2){
 //helper function to determine moves for knightMoves()
 function getPossibleMoves(currentPosition){
     //take the current position and use algorithm to determine where knight can move
+    const position = currentPosition;
+
+    const moves = [];
+
+
 
     //(do this with algorithm = any adjacent vertex = +2/+1 || -2/-1 of one coordinate value)
     //[3, 3] ---> adjacent vertices === 
@@ -92,3 +108,4 @@ function getPossibleMoves(currentPosition){
     //discard that entire set and return the array with only legitimate moves as coordinates
 }
 
+// console.log(knightMoves())
