@@ -42,6 +42,10 @@ export default function knightMoves(coord1, coord2){
         throw new Error("Please enter a valid coordinate.");
     }
 
+    if(coord1[0] === coord2[0] && coord1[1] === coord2[1]){
+        throw new Error("You are already at that tile.");
+    }
+
     //ensure all coordinate values are between 0 - 7
     if(coord1[0] < 0 || coord1[0] > 7 ||
        coord1[1] < 0 || coord1[1] > 7 ||
@@ -53,39 +57,44 @@ export default function knightMoves(coord1, coord2){
 
     //array to store every square knight has visited in path
     const pathTaken = [];
-    //Store the starting tile immediately
-    pathTaken.push(coord1);
 
     //this will be my queue
-    const possibleMoves = [];
-    possibleMoves.push(coord1);
+    const possibleMoves = [coord1];
+    // [0, 0];
 
+    //to keep track of what tiles have already been visited so we don't revisit them.
+    const tilesVisited = [coord1];
 
-    //MASSIVE ISSUE: NEED TO KEEP TRACK OF WHAT SQUARES HAVE ALREADY BEEN VISITED SO THE MOVES
-    //FOR THE CURRENT COORDINATE DON'T INCLUDE THE TILE YOU JUST CAME FROM OR HAVE PREVIOUSLY VISITED
     while(possibleMoves.length > 0){
         //store the current coordinate
         const coordinate = possibleMoves.shift();
 
-        const allMoves = [];
-        
-        //get possible coordinates knight can move to
-        const moves = getPossibleMoves(coordinate);
-
-        //add all possible moves returned from function into allMoves array.
-        allMoves.push(moves);
-        
-        //if the current coordinate isnt the destination tile, push the next possible moves.
-        if(coordinate[0] !== coord2[0] || coordinate[1] !== coord2[1]){
-            //push new coords (potential moves) to queue
-            possibleMoves.push(allMoves);
-
+        //if the current coordinate is the destination tile, exit early, you've found the shortest path
+        //add the destination coordinate to the end of the final path
+        if(coordinate[0] === coord2[0] && coordinate[1] === coord2[1]){
+            pathTaken.push(coordinate);
+            return;
         }
 
+        //get possible coordinates knight can move to
+        const moves = getPossibleMoves(coordinate);
+        // [[1, 2], [2, 1]];
+
+        //need to record where each move came from...? (record it's parent for final path)
+
+        //before pushing the moves to tilseVisisted and possibleMoves, check if there are duplicates
+        //if so, remove them / filter them out
+        if(moves.includes(...tilesVisited)){
+            //if any of our moves have already been visited, filter them out of moves
+        }
+
+        //push every move with spread operator into possibleMoves
+        //and keep track of what moves have already been done
+        tilesVisited.push(...moves);
+        possibleMoves.push(...moves);
+        
         //.push() shortest path to pathTaken[] to store path taken
     }
-
-    
 
     //final returned array that contains the shortest path
     return pathTaken;
