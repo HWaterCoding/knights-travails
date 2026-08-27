@@ -6,5 +6,9 @@ test("single coordinate passes and path is returned properly", ()=>{
 });
 
 test("double coordinate passes and path is returned correctly", ()=>{
-    expect(knightMoves([], []).toEqual([], []));
+    expect(knightMoves([0, 0], [3, 3]).toEqual([0, 0], [1, 2], [3, 3]));
+});
+
+test("One corner to the opposite board corner", ()=>{
+    expect(knightMoves([0, 0], [7, 7]).toEqual([0,0],[2,1],[4,2],[6,3],[4,4],[6,5],[7,7]));
 });

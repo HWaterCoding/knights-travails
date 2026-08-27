@@ -55,12 +55,12 @@ export default function knightMoves(coord1, coord2){
         throw new Error("That square doesn't exist.");
     }
 
-    //array to store every square knight has visited in path
-    const pathTaken = [];
+
+    //store arrays here? Use key:value pairs to represent parents?
+    const parentCoordinates = new Map();
 
     //this will be my queue
     const possibleMoves = [coord1];
-    // [0, 0];
 
     //to keep track of what tiles have already been visited so we don't revisit them.
     const tilesVisited = [coord1];
@@ -69,16 +69,8 @@ export default function knightMoves(coord1, coord2){
         //store the current coordinate
         const coordinate = possibleMoves.shift();
 
-        //if the current coordinate is the destination tile, exit early, you've found the shortest path
-        //add the destination coordinate to the end of the final path
-        if(coordinate[0] === coord2[0] && coordinate[1] === coord2[1]){
-            //reconstruct path by finding the correct parent coordinate
-            // return;
-        }
-
         //get possible coordinates knight can move to
         const moves = getPossibleMoves(coordinate);
-        // [[1, 2], [2, 1]];
 
         //Only push tiles/moves that have not already been visited
         for(const move of moves){
@@ -88,20 +80,22 @@ export default function knightMoves(coord1, coord2){
             if(!alreadyVisited){
                 tilesVisited.push(move);
                 possibleMoves.push(move);
-                // remember each moves parent move here?
+                //use .set() to create a key:value pair to keep track of parent coordinates
+                parentCoordinates.set(move, coordinate);
+                //if the destination tile if found in the moves of the current coordinate, end early
+                if(move[0] === coord2[0] && move[1] === coord2[1]){
+                    const shortestPath = [move];
+                    let child = move;
+                    while(child[0] !== coord1[0] || child[1] !== coord1[1]){
+                        const parent = parentCoordinates.get(child);
+                        shortestPath.unshift(parent);
+                        child = parent;
+                    }
+                    return shortestPath;
+                }
             }
         }
-
-        //need to record where each move came from...? (record it's parent for final path)
-
-        //push every move with spread operator into possibleMoves
-        //and keep track of what moves have already been done
-        tilesVisited.push(...moves);
-        possibleMoves.push(...moves);
     }
-
-    //final returned array that contains the shortest path
-    return pathTaken;
 }
 
 //helper function to determine moves for knightMoves() (adjacency list)
@@ -136,3 +130,12 @@ function getPossibleMoves(currentPosition){
 
 
 console.log(knightMoves([0, 0], [3, 3]))
+
+
+
+
+        //if the current coordinate is the destination tile, exit early, you've found the shortest path
+        //add the destination coordinate to the end of the final path
+        // if(coordinate[0] === coord2[0] && coordinate[1] === coord2[1]){
+            // return the final path here
+        // }
