@@ -42,6 +42,8 @@ export default function knightMoves(coord1, coord2){
         throw new Error("Please enter a valid coordinate.");
     }
 
+    //add a check to make sure the number passed in is an integer, and not a decimal or NaN
+
     if(coord1[0] === coord2[0] && coord1[1] === coord2[1]){
         throw new Error("You are already at that tile.");
     }
@@ -63,7 +65,7 @@ export default function knightMoves(coord1, coord2){
     const possibleMoves = [coord1];
 
     //to keep track of what tiles have already been visited so we don't revisit them.
-    const tilesVisited = [coord1];
+    const discoveredTiles = [coord1];
 
     while(possibleMoves.length > 0){
         //store the current coordinate
@@ -74,11 +76,11 @@ export default function knightMoves(coord1, coord2){
 
         //Only push tiles/moves that have not already been visited
         for(const move of moves){
-            const alreadyVisited = tilesVisited.some(tile =>{
+            const alreadyVisited = discoveredTiles.some(tile =>{
                 return tile[0] === move[0] && tile[1] === move[1];
             });
             if(!alreadyVisited){
-                tilesVisited.push(move);
+                discoveredTiles.push(move);
                 possibleMoves.push(move);
                 //use .set() to create a key:value pair to keep track of parent coordinates
                 parentCoordinates.set(move, coordinate);
