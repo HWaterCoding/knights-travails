@@ -1,54 +1,23 @@
-//entry point 
-
-//pseudocode for project:
-//Must create a knightMoves() function that takes two arguments that will represent co-ordinates on a chessboard
-//The first co-ordinate would be where the knight starts, and the second, where it ends up.
-//When the function is called, the output should return all moves it would make in sequence to get there
-//The return should always be the shortest possible path.
-
-//Use a graph data structure to do this.
-//The board, or graph, will be an 8x8 square (verticies 0-7)
-//You do not need a literal graph, it will be implicit. 
-//The knight must move in a standard L formation on every turn
-//Instead of creating a literal graph, the math used will remain the same to dictate where it can move
-
-//Think of the benefits between edge list, adjacency matrices, or an adjacency list
-
-//terms to remember:
-//vertex (the actual co-ordinate on the graph, aka, where the knight can move.)
-//edge (the path traveled from one vertex to another)
-//degree (the amount of edges a single vertex has)
-//weight (number value assigned to the edge, in some cases, it would represent distance)(Probably not relevant)
-//directed vs undirected graph (this will be undirected)
-
-
-
-//USE A BFS <---- NOT A DFS. <--- BFS IS SPECIFICALLY FOR FINDING A SHORTEST PATH, DFS WILL CYCLE
-
-
-
-//where to start:
-//Create outline for function
-//Define functions parameters
-
-//use conditional statements to provide the implicit 8x8 graph/board
-//rather than create an actual graph, determine the vertex current stood on and mathematically calculate it's neighbors.
-//Throw away any co-ordinates that aren't on the board, again, with conditionals to check >= 0
-//
 export default function knightMoves(coord1, coord2){
     //strictly enforce proper rules for co-ords
+    //1. Only accept arrays of 2 values.
     if(!Array.isArray(coord1) || !Array.isArray(coord2) ||
         coord1.length !== 2 || coord2.length !== 2){
         throw new Error("Please enter a valid coordinate.");
     }
 
-    //add a check to make sure the number passed in is an integer, and not a decimal or NaN
+    //2. Ensure the values in the arrays are integers
+    const allInts = [...coord1, ...coord2].every(value => Number.isInteger(value));
+    if(!allInts){
+        throw new Error("Only enter integers as coordinates.")
+    }
 
+    //3. Do not accept the same coordinate twice.
     if(coord1[0] === coord2[0] && coord1[1] === coord2[1]){
         throw new Error("You are already at that tile.");
     }
 
-    //ensure all coordinate values are between 0 - 7
+    //4. Ensure all coordinate values are between 0 - 7
     if(coord1[0] < 0 || coord1[0] > 7 ||
        coord1[1] < 0 || coord1[1] > 7 ||
        coord2[0] < 0 || coord2[0] > 7 ||
@@ -57,14 +26,13 @@ export default function knightMoves(coord1, coord2){
         throw new Error("That square doesn't exist.");
     }
 
-
-    //store arrays here? Use key:value pairs to represent parents?
+    //Map to store parent-child coordinate relationships
     const parentCoordinates = new Map();
 
-    //this will be my queue
+    //Array to act as a queue
     const possibleMoves = [coord1];
 
-    //to keep track of what tiles have already been visited so we don't revisit them.
+    //Track which tiles are discovered so as to not revisit them constantly
     const discoveredTiles = [coord1];
 
     while(possibleMoves.length > 0){
@@ -84,7 +52,8 @@ export default function knightMoves(coord1, coord2){
                 possibleMoves.push(move);
                 //use .set() to create a key:value pair to keep track of parent coordinates
                 parentCoordinates.set(move, coordinate);
-                //if the destination tile if found in the moves of the current coordinate, end early
+                //if the destination tile is found in the moves of the current coordinate
+                //rebuild chain by asking for parent coordinates and return early
                 if(move[0] === coord2[0] && move[1] === coord2[1]){
                     const shortestPath = [move];
                     let child = move;
@@ -105,13 +74,7 @@ function getPossibleMoves(currentPosition){
     //take the current position and use algorithm to determine where knight can move
     const [x, y] = currentPosition;
 
-    // adjacent vertices: (if currentPosition = [3, 3])
-    // [4, 5](+1, +2), [5, 4](+2, +1)
-    // [2, 1](-1, -2), [1, 2](-2, -1)
-    // [4, 1](+1, -2), [5, 2](+2, -1)
-    // [2, 5](-1, +2), [1, 4](-2, +1)
     //There are a maximum of 8 possible adjacent verices for any given square
-
     //generate all adjacent vertices (possible moves for knight) 
     const potentialMoves = [
         [x + 1, y + 2], [x + 2, y + 1],
@@ -130,14 +93,4 @@ function getPossibleMoves(currentPosition){
     return legitimateMoves;
 }
 
-
 console.log(knightMoves([0, 0], [7, 7]))
-
-
-
-
-        //if the current coordinate is the destination tile, exit early, you've found the shortest path
-        //add the destination coordinate to the end of the final path
-        // if(coordinate[0] === coord2[0] && coordinate[1] === coord2[1]){
-            // return the final path here
-        // }

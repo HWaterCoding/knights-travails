@@ -23,6 +23,10 @@ test("Only accept arrays containing two values", ()=>{
     expect(() => knightMoves([3, 2, 1], [1])).toThrow("Please enter a valid coordinate.");
 });
 
+test("Only accept numbers as valid values in arrays passed in", ()=>{
+    expect(() => knightMoves(["d", 0], [2, 2])).toThrow("Only enter integers as coordinates.");
+});
+
 test("Don't accept passing in the same coordinate twice", ()=>{
     expect(() => knightMoves([1, 2], [1, 2])).toThrow("You are already at that tile.");
 });
